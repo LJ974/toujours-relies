@@ -5,7 +5,7 @@ import { firebaseConfig } from './firebase-config.js';
 const app=initializeApp(firebaseConfig),db=getDatabase(app),$=id=>document.getElementById(id);
 let authed=sessionStorage.getItem('tr_admin')==='1',moments={},allMessages={},subscribed=false;
 const USER_HASH='8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
-const PASS_HASH='48aef22b5e62edb5aac488c1826658e479684ff481292116b45763d860bdc5be';
+const PASS_HASH='10993a59dae822b56f42323c444f47978e04f72ec88bfb2a319e96a47d9b34e7';
 const animationLabels={cauldron:'🔥 Chaudron',book:'📖 Livre',fireworks:'🎆 Feu d’artifice',petals:'🌸 Pétales',random:'✨ Surprise'};
 const themes=['Famille','Amis','Anniversaire','Soutien','Travail','Vacances','Libre'];
 
