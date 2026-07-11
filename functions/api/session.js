@@ -1,0 +1,2 @@
+import {sign,cookie} from './_auth.js';
+export async function onRequestGet({request,env}){let ok=false;try{const token=cookie(request,'tr_session');if(token){const i=token.lastIndexOf('|'),payload=atob(token.slice(0,i)),sig=token.slice(i+1),[user,exp]=payload.split('|');ok=user===env.ADMIN_USER&&Date.now()<Number(exp)&&sig===await sign(payload,env.SESSION_SECRET)}}catch{}return new Response(JSON.stringify({authenticated:ok}),{headers:{'content-type':'application/json'}})}
