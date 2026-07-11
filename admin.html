@@ -1,7 +1,91 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Administration — Toujours Reliés</title><link rel="stylesheet" href="./styles.css"></head>
-<body><main class="shell admin-shell">
-<section id="loginCard" class="card narrow"><p class="eyebrow">ADMINISTRATION</p><h1>Toujours Reliés</h1><form id="loginForm"><label>Identifiant<input id="login" autocomplete="username" required></label><label>Mot de passe<input id="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Se connecter</button><p id="loginError" class="error"></p></form></section>
-<section id="adminApp" class="hidden"><header class="hero card"><div><p class="eyebrow">TABLEAU DE BORD</p><h1>Créer un nouveau moment</h1></div><button id="logout" class="secondary">Déconnexion</button></header>
-<section class="card"><form id="momentForm"><div class="grid two"><label>Titre<input id="title" required placeholder="Un petit coucou ❤️"></label><label>Participants prévus<input id="target" type="number" min="1" value="8" required></label></div><label>Petit texte d’introduction<textarea id="intro" rows="3">Dépose une émotion, une pensée, une victoire, une difficulté ou simplement un petit signe de vie.</textarea></label><div class="grid two"><label>Thème<select id="theme"><option>Famille</option><option>Amis</option><option>Anniversaire</option><option>Soutien</option><option>Travail</option><option>Vacances</option><option>Libre</option></select></label><label>Durée<select id="duration"><option value="6">6 heures</option><option value="12">12 heures</option><option value="24" selected>24 heures</option><option value="48">2 jours</option><option value="72">3 jours</option><option value="168">7 jours</option></select></label></div><section><h2>Participation</h2><div class="grid two"><label class="check"><input id="confirmPost" type="checkbox" checked> Confirmer avant l’envoi</label><label class="check"><input id="allowWithdrawal" type="checkbox" checked> Autoriser le retrait</label><label class="check"><input id="confirmEdit" type="checkbox" checked> Confirmer avant une modification</label><label class="check"><input id="confirmDelete" type="checkbox" checked> Confirmer avant le retrait</label></div></section><section><h2>Animation finale</h2><div class="grid two"><label>Finale<select id="animationType"><option value="cauldron">🔥 Chaudron incandescent & explosion</option><option value="book">📖 Livre magique & confettis</option><option value="fireworks">🎆 Feu d’artifice</option><option value="petals">🌸 Pluie de pétales</option><option value="random">✨ Surprise aléatoire</option></select></label><label>Affichage de la jauge<select id="gaugeVisibility"><option value="visible">Visible pour tous</option><option value="hidden">Masquée aux participants</option></select></label></div></section><label>Phrase finale<select id="finalPreset"><option>Même sans parler tous les jours… on reste reliés. ❤️</option><option>Les silences passent. Les liens, eux, restent. 🫶</option><option>Merci d’avoir partagé un petit morceau de votre journée. ✨</option><option>Peu importe les émotions déposées… elles racontent un peu de nous. 🌈</option></select></label><label>Phrase finale personnalisée<textarea id="finalText" rows="3"></textarea></label><button class="primary big" type="submit">✨ Créer le moment</button><p id="createStatus"></p></form></section>
-<section class="card"><h2>Mes moments</h2><div id="momentsList"></div></section></section></main><script type="module" src="./admin.js"></script><script type="module" src="./admin-controls.js"></script></body></html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administration — Toujours Reliés</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main class="shell admin-shell">
+  <section id="loginCard" class="card narrow">
+    <p class="eyebrow">ADMINISTRATION</p>
+    <h1>Toujours Reliés</h1>
+    <form id="loginForm">
+      <label>Identifiant<input id="login" autocomplete="username" required></label>
+      <label>Mot de passe<input id="password" type="password" autocomplete="current-password" required></label>
+      <button class="primary" type="submit">Se connecter</button>
+      <p id="loginError" class="error"></p>
+    </form>
+  </section>
+
+  <section id="adminApp" class="hidden">
+    <header class="hero card admin-hero">
+      <div>
+        <p class="eyebrow">TABLEAU DE BORD</p>
+        <h1>Toujours Reliés</h1>
+        <p>Créer, suivre et lancer tes moments collectifs.</p>
+      </div>
+      <button id="logout" class="secondary">Déconnexion</button>
+    </header>
+
+    <section class="card">
+      <div class="section-title-row">
+        <div><p class="eyebrow">NOUVEAU MOMENT</p><h2>Création rapide</h2></div>
+      </div>
+      <form id="momentForm">
+        <div class="grid two">
+          <label>Titre<input id="title" required placeholder="Un petit coucou ❤️"></label>
+          <label>Participants prévus<input id="target" type="number" min="1" value="8" required></label>
+        </div>
+        <label>Petit texte d’introduction<textarea id="intro" rows="3">Dépose une émotion, une pensée, une victoire, une difficulté ou simplement un petit signe de vie.</textarea></label>
+        <div class="grid two">
+          <label>Thème<select id="theme"><option>Famille</option><option>Amis</option><option>Anniversaire</option><option>Soutien</option><option>Travail</option><option>Vacances</option><option>Libre</option></select></label>
+          <label>Durée<select id="duration"><option value="6">6 heures</option><option value="12">12 heures</option><option value="24" selected>24 heures</option><option value="48">2 jours</option><option value="72">3 jours</option><option value="168">7 jours</option></select></label>
+        </div>
+        <label>Phrase finale<select id="finalPreset"><option>Même sans parler tous les jours… on reste reliés. ❤️</option><option>Les silences passent. Les liens, eux, restent. 🫶</option><option>Merci d’avoir partagé un petit morceau de votre journée. ✨</option><option>Peu importe les émotions déposées… elles racontent un peu de nous. 🌈</option></select></label>
+        <label>Phrase finale personnalisée<textarea id="finalText" rows="3"></textarea></label>
+
+        <details class="advanced-panel">
+          <summary>⚙️ Paramètres avancés</summary>
+          <div class="advanced-content">
+            <h3>Participation</h3>
+            <div class="grid two">
+              <label class="check"><input id="confirmPost" type="checkbox" checked> Confirmer avant l’envoi</label>
+              <label class="check"><input id="allowWithdrawal" type="checkbox" checked> Autoriser le retrait</label>
+              <label class="check"><input id="confirmEdit" type="checkbox" checked> Confirmer avant une modification</label>
+              <label class="check"><input id="confirmDelete" type="checkbox" checked> Confirmer avant le retrait</label>
+            </div>
+            <h3>Finale</h3>
+            <div class="grid two">
+              <label>Animation<select id="animationType"><option value="cauldron">🔥 Chaudron incandescent</option><option value="book">📖 Livre magique</option><option value="fireworks">🎆 Feu d’artifice</option><option value="petals">🌸 Pluie de pétales</option><option value="random">✨ Surprise aléatoire</option></select></label>
+              <label>Jauge<select id="gaugeVisibility"><option value="visible">Visible pour tous</option><option value="hidden">Masquée aux participants</option></select></label>
+            </div>
+          </div>
+        </details>
+        <button class="primary big" type="submit">✨ Créer le moment</button>
+        <p id="createStatus"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-title-row"><div><p class="eyebrow">SUIVI</p><h2>Moments actifs</h2></div></div>
+      <div id="momentsList"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title-row"><div><p class="eyebrow">HISTORIQUE</p><h2>Archives</h2></div></div>
+      <div id="archivesList"></div>
+    </section>
+  </section>
+</main>
+
+<div id="adminModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <button id="closeModal" class="modal-close" aria-label="Fermer">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<script type="module" src="./admin.js"></script>
+</body>
+</html>
