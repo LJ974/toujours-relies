@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Toujours Reliés</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero card">
+      <div class="logo">✨</div>
+      <div>
+        <p class="eyebrow">TOUJOURS RELIÉS</p>
+        <h1 id="momentTitle">Un petit moment entre nous</h1>
+        <p id="momentIntro">Même sans parler tous les jours, on reste reliés.</p>
+      </div>
+      <div id="countdown" class="countdown">Chargement…</div>
+    </header>
+
+    <section id="emptyState" class="card hidden">
+      <h2>Aucun moment ouvert</h2>
+      <p>Ouvre le lien reçu dans ton groupe.</p>
+    </section>
+
+    <section id="progressCard" class="card hidden">
+      <div class="row between"><strong>Le moment prend vie</strong><span id="progressText">0 %</span></div>
+      <div class="progress"><div id="progressBar"></div></div>
+    </section>
+
+    <section id="participationCard" class="card hidden">
+      <p class="notice">Après publication, tu ne peux pas ajouter un deuxième message actif. Tu peux seulement modifier ou supprimer celui-ci. Après suppression, tu pourras republier.</p>
+      <form id="messageForm">
+        <div class="grid two">
+          <label>Ton prénom
+            <input id="name" maxlength="30" placeholder="Prénom">
+          </label>
+          <label class="check"><input id="anonymous" type="checkbox"> Publier anonymement</label>
+        </div>
+        <label>Ton émotion
+          <select id="emotion"></select>
+        </label>
+        <label>Ton message
+          <textarea id="message" maxlength="280" rows="4" placeholder="Une humeur, une pensée, un moment cool… ou pas."></textarea>
+        </label>
+        <div class="row between"><small id="counter">0/280</small><button class="primary" type="submit">💫 Déposer mon message</button></div>
+      </form>
+      <div id="myStatus" class="hidden"></div>
+    </section>
+
+    <section id="messagesCard" class="card hidden">
+      <p class="eyebrow">LES PETITS MORCEAUX DU MOMENT</p>
+      <h2>Messages partagés</h2>
+      <div id="messagesList" class="messages"></div>
+    </section>
+
+    <section id="finalCard" class="card final hidden">
+      <button id="playFinal" class="primary big">✨ Découvrir la cérémonie</button>
+    </section>
+  </main>
+
+  <div id="ceremony" class="ceremony hidden" aria-live="polite">
+    <div id="particles"></div>
+    <div class="cauldron" id="cauldron">🔥</div>
+    <div class="book hidden" id="book">📖</div>
+    <div class="ceremonyText" id="ceremonyText"></div>
+    <button id="replay" class="secondary hidden">↻ Rejouer l’animation</button>
+    <button id="closeCeremony" class="ghost hidden">Fermer</button>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
