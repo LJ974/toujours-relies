@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#7d4bd1">
   <title>Toujours Reliés</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,17 +20,22 @@
     </header>
 
     <section id="emptyState" class="card hidden">
-      <h2>Aucun moment ouvert</h2>
-      <p>Ouvre le lien reçu dans ton groupe.</p>
+      <h2>Ce lien ne correspond à aucun moment</h2>
+      <p>Vérifie que le lien reçu a été copié en entier.</p>
+    </section>
+
+    <section id="statusCard" class="card status-card hidden">
+      <strong id="statusTitle"></strong>
+      <p id="statusText"></p>
     </section>
 
     <section id="progressCard" class="card hidden">
-      <div class="row between"><strong>Le moment prend vie</strong><span id="progressText">0 %</span></div>
+      <div class="row between"><strong id="progressLabel">Le moment prend vie</strong><span id="progressText">0 %</span></div>
       <div class="progress"><div id="progressBar"></div></div>
     </section>
 
     <section id="participationCard" class="card hidden">
-      <p class="notice">Après publication, tu ne peux pas ajouter un deuxième message actif. Tu peux seulement modifier ou supprimer celui-ci. Après suppression, tu pourras republier.</p>
+      <p class="notice">Une seule phrase active par appareil. Après publication, tu peux la modifier ou la supprimer puis en publier une autre, tant que le moment est ouvert.</p>
       <form id="messageForm">
         <div class="grid two">
           <label>Ton prénom
@@ -43,7 +49,7 @@
         <label>Ton message
           <textarea id="message" maxlength="280" rows="4" placeholder="Une humeur, une pensée, un moment cool… ou pas."></textarea>
         </label>
-        <div class="row between"><small id="counter">0/280</small><button class="primary" type="submit">💫 Déposer mon message</button></div>
+        <div class="row between"><small id="counter">0/280</small><button id="submitMessage" class="primary" type="submit">💫 Déposer mon message</button></div>
       </form>
       <div id="myStatus" class="hidden"></div>
     </section>
@@ -55,7 +61,19 @@
     </section>
 
     <section id="finalCard" class="card final hidden">
-      <button id="playFinal" class="primary big">✨ Découvrir la cérémonie</button>
+      <h2>✨ La cérémonie est prête</h2>
+      <p>Tout le monde peut la découvrir, même sans avoir publié de message.</p>
+      <button id="playFinal" class="primary big">Découvrir la cérémonie</button>
+    </section>
+
+    <section id="shareCard" class="card share-card hidden">
+      <h2>Partager ce moment</h2>
+      <div class="share-actions">
+        <button id="shareNative" class="secondary">📲 Partager</button>
+        <button id="shareWhatsApp" class="secondary">💬 WhatsApp</button>
+        <button id="copyPublicLink" class="secondary">📋 Copier le lien</button>
+      </div>
+      <p id="shareStatus" class="muted"></p>
     </section>
   </main>
 
@@ -64,7 +82,7 @@
     <div class="cauldron" id="cauldron">🔥</div>
     <div class="book hidden" id="book">📖</div>
     <div class="ceremonyText" id="ceremonyText"></div>
-    <button id="replay" class="secondary hidden">↻ Rejouer l’animation</button>
+    <button id="replay" class="secondary hidden">↻ Rejouer la cérémonie</button>
     <button id="closeCeremony" class="ghost hidden">Fermer</button>
   </div>
 
