@@ -8,61 +8,65 @@ const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms
 let running=false;
 
 function clearParticles(){$('particles').innerHTML=''}
-function makeEmber(index=0){
-  const root=$('particles'),p=document.createElement('span');
-  p.className=`real-particle ${index%3===0?'ember ember-gold':'ember'}`;
-  const angle=(-Math.PI*.85)+(Math.random()*Math.PI*.7),distance=120+Math.random()*430;
-  p.style.left='50%';p.style.top='50%';
-  p.style.setProperty('--x',`${Math.cos(angle)*distance}px`);
-  p.style.setProperty('--y',`${Math.sin(angle)*distance-60}px`);
-  p.style.setProperty('--r',`${Math.random()*520-260}deg`);
-  p.style.animationDelay=`${Math.random()*.5}s`;
-  p.style.animationDuration=`${3.2+Math.random()*2}s`;
-  root.appendChild(p);setTimeout(()=>p.remove(),5600)
+function addParticle(kind='ember',slow=false){
+  const p=document.createElement('span');p.className=`cinematic-particle ${kind}`;
+  p.style.left=`${8+Math.random()*84}%`;p.style.top=slow?`${5+Math.random()*70}%`:'58%';
+  p.style.setProperty('--dx',`${-160+Math.random()*320}px`);
+  p.style.setProperty('--dy',`${slow?-140-Math.random()*260:-220-Math.random()*420}px`);
+  p.style.setProperty('--rot',`${-540+Math.random()*1080}deg`);
+  p.style.setProperty('--scale',`${.6+Math.random()*1.2}`);
+  p.style.animationDuration=`${slow?4.8+Math.random()*3.5:2.5+Math.random()*2.2}s`;
+  p.style.animationDelay=`${Math.random()*.7}s`;
+  $('particles').appendChild(p);setTimeout(()=>p.remove(),9000)
 }
-function emberWave(count=24){for(let i=0;i<count;i++)setTimeout(()=>makeEmber(i),i*55)}
-function showCauldron(){
-  $('cauldron').classList.remove('hidden');
-  $('book').classList.add('hidden');
-  $('ceremony').dataset.animation='cauldron';
+function shower(kind,count,slow=false){for(let i=0;i<count;i++)setTimeout(()=>addParticle(kind,slow),i*(slow?75:28))}
+function firework(x,y,delay=0){
+  const root=$('particles');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('span');p.className='cinematic-particle firework-ray';p.style.left=`${x}%`;p.style.top=`${y}%`;
+    const angle=(Math.PI*2*i)/18,distance=70+Math.random()*120;
+    p.style.setProperty('--dx',`${Math.cos(angle)*distance}px`);p.style.setProperty('--dy',`${Math.sin(angle)*distance}px`);p.style.animationDelay=`${delay}s`;p.style.animationDuration=`${3.3+Math.random()*1.2}s`;
+    root.appendChild(p);setTimeout(()=>p.remove(),6500)
+  }
 }
+function intensity(level){
+  const c=$('cauldron');c.classList.remove('power-1','power-2','power-3','react-left','react-right','finale');c.classList.add(`power-${Math.min(3,Math.max(1,level))}`)
+}
+async function react(index){
+  const c=$('cauldron');c.classList.remove('react-left','react-right');void c.offsetWidth;c.classList.add(index%2?'react-left':'react-right');
+  shower(index%3===0?'spark':'ember',10,false);await sleep(420)
+}
+async function readData(){const [mSnap,msgSnap]=await Promise.all([get(ref(db,`moments/${momentId}`)),get(ref(db,`messages/${momentId}`))]);return{moment:mSnap.val()||{},items:Object.values(msgSnap.val()||{}).filter(x=>x&&!x.deleted)}}
 async function intro(text){
-  showCauldron();clearParticles();
-  text.textContent='Le chaudron recueille chaque mot…';
-  await sleep(1000);
-  $('cauldron').classList.add('awake');
-  emberWave(34);
-  await sleep(2700);
-  text.classList.add('fade-out');await sleep(520);text.textContent='';text.classList.remove('fade-out');await sleep(320)
+  clearParticles();$('book').classList.add('hidden');$('cauldron').classList.remove('hidden');$('ceremony').dataset.animation='cauldron';
+  intensity(1);text.textContent='Le chaudron s’éveille doucement…';shower('ember',24,true);await sleep(2500);
+  $('cauldron').classList.add('awake');text.classList.add('fade-out');await sleep(450);text.textContent='';text.classList.remove('fade-out');await sleep(300)
 }
-async function readData(){
-  const [mSnap,msgSnap]=await Promise.all([get(ref(db,`moments/${momentId}`)),get(ref(db,`messages/${momentId}`))]);
-  return{moment:mSnap.val()||{},items:Object.values(msgSnap.val()||{}).filter(x=>x&&!x.deleted)}
+async function finalSequence(text,finalText){
+  const c=$('cauldron');c.classList.remove('power-1','power-2','power-3');c.classList.add('finale');
+  text.classList.add('fade-out');await sleep(500);text.textContent='';
+  shower('ember',45,false);shower('star',55,true);shower('confetti',70,true);
+  firework(20,28,0);firework(78,22,.55);firework(50,16,1.05);firework(32,38,1.5);firework(68,42,1.9);
+  await sleep(1800);text.textContent=finalText; text.classList.remove('fade-out');text.classList.add('final-reveal');await sleep(7600)
 }
 async function play(){
   if(running||!momentId)return;running=true;
-  const ceremony=$('ceremony'),text=$('ceremonyText');
-  ceremony.classList.remove('hidden');$('replay').classList.add('hidden');$('closeCeremony').classList.add('hidden');text.className='ceremonyText';
+  const ceremony=$('ceremony'),text=$('ceremonyText');ceremony.classList.remove('hidden');$('replay').classList.add('hidden');$('closeCeremony').classList.add('hidden');text.className='ceremonyText';
   try{
     const {moment,items}=await readData();await intro(text);
-    if(!items.length){
-      text.textContent='Même sans mot déposé, ce moment rappelle que le lien existe.';
-      text.classList.add('message-reveal');await sleep(4200)
-    }else{
-      const longest=Math.max(...items.map(x=>(x.text||'').length));
-      const per=Math.max(3800,Math.min(6000,3100+longest*11));
-      for(const item of items){
+    if(!items.length){text.textContent='Même sans mot déposé, ce moment rappelle que le lien existe.';text.classList.add('message-reveal');await sleep(4300)}
+    else{
+      const per=Math.max(3900,Math.min(6200,3200+Math.max(...items.map(x=>(x.text||'').length))*12));
+      for(let i=0;i<items.length;i++){
+        const item=items[i],level=1+Math.floor((i/Math.max(1,items.length-1))*2);intensity(level);await react(i);
         text.classList.remove('message-reveal');text.classList.add('fade-out');await sleep(420);
         text.textContent=`${item.anonymous?'Anonyme':item.name||'Anonyme'}\n\n${item.text||''}`;
-        text.classList.remove('fade-out');text.classList.add('message-reveal');emberWave(10);await sleep(per)
+        text.classList.remove('fade-out');text.classList.add('message-reveal');await sleep(per)
       }
     }
-    text.classList.add('fade-out');await sleep(560);text.textContent='';clearParticles();emberWave(46);await sleep(1700);
-    $('cauldron').classList.add('final-glow');
-    text.textContent=moment.finalText||'Merci d’avoir apporté ta contribution à ce moment. Ensemble, vous l’avez rendu unique.';
-    text.classList.remove('fade-out');text.classList.add('final-reveal');await sleep(6500)
+    await finalSequence(text,moment.finalText||'Merci d’avoir rendu ce moment possible. ✨')
   }catch(e){console.error(e);text.textContent='La cérémonie n’a pas pu se charger. Réessaie dans un instant.'}
-  finally{running=false;$('replay').classList.remove('hidden');$('closeCeremony').classList.remove('hidden');$('cauldron').classList.remove('awake','final-glow')}
+  finally{running=false;$('replay').classList.remove('hidden');$('closeCeremony').classList.remove('hidden');$('cauldron').classList.remove('awake','power-1','power-2','power-3','react-left','react-right','finale')}
 }
 
 document.addEventListener('click',e=>{const id=e.target?.id;if(id==='playFinal'||id==='replay'){e.preventDefault();e.stopImmediatePropagation();play()}},true);
