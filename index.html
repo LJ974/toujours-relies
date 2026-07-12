@@ -15,45 +15,26 @@
 </head>
 <body>
   <section id="invitationScreen" class="invitation-screen hidden" aria-live="polite">
-    <div class="invitation-glow invitation-glow-one"></div>
-    <div class="invitation-glow invitation-glow-two"></div>
-    <article class="invitation-card">
-      <div class="invitation-symbol" aria-hidden="true">✨</div>
-      <p class="eyebrow">UNE INVITATION TOUJOURS RELIÉS</p>
-      <h1 id="invitationTitle">Tu es invité(e) à un moment collectif</h1>
-      <p id="invitationIntro" class="invitation-intro">Une personne a souhaité créer un petit moment à partager avec toi.</p>
-      <div class="invitation-promise">
-        <span>💛 Aucun jugement</span>
-        <span>⏱ Moins d’une minute</span>
-        <span>✨ Une cérémonie à la fin</span>
-      </div>
-      <p class="invitation-help">Dépose simplement une pensée, une émotion, une petite victoire, une difficulté ou un signe de vie. Il n’y a ni bonne ni mauvaise réponse.</p>
-      <div id="invitationDeadline" class="invitation-deadline"></div>
-      <button id="enterMoment" class="primary invitation-button" type="button">Participer au moment</button>
-      <small class="invitation-note">Ton message pourra être modifié ou retiré tant que le moment reste ouvert, selon les choix de l’organisateur.</small>
-    </article>
+    <div class="invitation-glow invitation-glow-one"></div><div class="invitation-glow invitation-glow-two"></div>
+    <article class="invitation-card"><div class="invitation-symbol" aria-hidden="true">✨</div><p class="eyebrow">UNE INVITATION TOUJOURS RELIÉS</p><h1 id="invitationTitle">Tu es invité(e) à un moment collectif</h1><p id="invitationIntro" class="invitation-intro">Une personne a souhaité créer un petit moment à partager avec toi.</p><div class="invitation-promise"><span>💛 Aucun jugement</span><span>⏱ Moins d’une minute</span><span>✨ Une cérémonie à la fin</span></div><p class="invitation-help">Dépose simplement une pensée, une émotion, une petite victoire, une difficulté ou un signe de vie. Il n’y a ni bonne ni mauvaise réponse.</p><div id="invitationDeadline" class="invitation-deadline"></div><button id="enterMoment" class="primary invitation-button" type="button">Participer au moment</button><small class="invitation-note">Ton message pourra être modifié ou retiré tant que le moment reste ouvert, selon les choix de l’organisateur.</small></article>
   </section>
+  <div id="experience" class="hidden"><main class="shell">
+    <header class="hero card"><div class="logo">✨</div><div><p class="eyebrow">TOUJOURS RELIÉS</p><h1 id="momentTitle">Un petit moment entre nous</h1><p id="momentIntro">Même sans parler tous les jours, on reste reliés.</p></div><div id="countdown" class="countdown">Chargement…</div></header>
+    <section id="emptyState" class="card hidden"><h2>Ce lien ne correspond à aucun moment</h2><p>Vérifie que le lien reçu a été copié en entier.</p></section>
+    <section id="statusCard" class="card status-card hidden"><strong id="statusTitle"></strong><p id="statusText"></p></section>
+    <section id="progressCard" class="card hidden"><div class="row between"><strong id="progressLabel">Le moment prend vie</strong><span id="progressText">0 %</span></div><div class="progress"><div id="progressBar"></div></div></section>
+    <section id="participationCard" class="card hidden"><p class="welcome-line">💛 Merci d’être là. Ton petit mot compte.</p><p class="notice">Une seule phrase active par appareil. Après publication, tu peux la modifier ou la supprimer puis en publier une autre, tant que le moment est ouvert.</p><form id="messageForm"><div class="grid two"><label>Ton prénom<input id="name" maxlength="30" placeholder="Prénom"></label><label class="check"><input id="anonymous" type="checkbox"> Publier anonymement</label></div><label>Ton émotion<select id="emotion"></select></label><label>Ton message<textarea id="message" maxlength="280" rows="4" placeholder="Une humeur, une pensée, un moment cool… ou pas."></textarea></label><div class="row between"><small id="counter">0/280</small><button id="submitMessage" class="primary" type="submit">💫 Déposer mon message</button></div></form><div id="myStatus" class="hidden"></div></section>
+    <section id="messagesCard" class="card hidden"><p class="eyebrow">LES PETITS MORCEAUX DU MOMENT</p><h2>Messages partagés</h2><div id="messagesList" class="messages"></div></section>
+    <section id="finalCard" class="card final hidden"><div class="final-icon">✨</div><h2>La cérémonie est prête</h2><p>Le moment est terminé. Prends quelques instants pour découvrir ce que chacun a déposé.</p><button id="playFinal" class="primary big">Découvrir la cérémonie</button></section>
+    <section id="shareCard" class="card share-card hidden"><h2>Inviter quelqu’un à ce moment</h2><p class="muted">Partage cette invitation uniquement avec les personnes concernées.</p><div class="share-actions"><button id="shareNative" class="secondary">📲 Partager l’invitation</button><button id="shareWhatsApp" class="secondary">💬 WhatsApp</button><button id="copyPublicLink" class="secondary">📋 Copier le lien</button></div><p id="shareStatus" class="muted"></p></section>
+  </main></div>
 
-  <div id="experience" class="hidden">
-    <main class="shell">
-      <header class="hero card">
-        <div class="logo">✨</div>
-        <div><p class="eyebrow">TOUJOURS RELIÉS</p><h1 id="momentTitle">Un petit moment entre nous</h1><p id="momentIntro">Même sans parler tous les jours, on reste reliés.</p></div>
-        <div id="countdown" class="countdown">Chargement…</div>
-      </header>
-      <section id="emptyState" class="card hidden"><h2>Ce lien ne correspond à aucun moment</h2><p>Vérifie que le lien reçu a été copié en entier.</p></section>
-      <section id="statusCard" class="card status-card hidden"><strong id="statusTitle"></strong><p id="statusText"></p></section>
-      <section id="progressCard" class="card hidden"><div class="row between"><strong id="progressLabel">Le moment prend vie</strong><span id="progressText">0 %</span></div><div class="progress"><div id="progressBar"></div></div></section>
-      <section id="participationCard" class="card hidden"><p class="welcome-line">💛 Merci d’être là. Ton petit mot compte.</p><p class="notice">Une seule phrase active par appareil. Après publication, tu peux la modifier ou la supprimer puis en publier une autre, tant que le moment est ouvert.</p><form id="messageForm"><div class="grid two"><label>Ton prénom<input id="name" maxlength="30" placeholder="Prénom"></label><label class="check"><input id="anonymous" type="checkbox"> Publier anonymement</label></div><label>Ton émotion<select id="emotion"></select></label><label>Ton message<textarea id="message" maxlength="280" rows="4" placeholder="Une humeur, une pensée, un moment cool… ou pas."></textarea></label><div class="row between"><small id="counter">0/280</small><button id="submitMessage" class="primary" type="submit">💫 Déposer mon message</button></div></form><div id="myStatus" class="hidden"></div></section>
-      <section id="messagesCard" class="card hidden"><p class="eyebrow">LES PETITS MORCEAUX DU MOMENT</p><h2>Messages partagés</h2><div id="messagesList" class="messages"></div></section>
-      <section id="finalCard" class="card final hidden"><div class="final-icon">✨</div><h2>La cérémonie est prête</h2><p>Le moment est terminé. Prends quelques instants pour découvrir ce que chacun a déposé.</p><button id="playFinal" class="primary big">Découvrir la cérémonie</button></section>
-      <section id="shareCard" class="card share-card hidden"><h2>Inviter quelqu’un à ce moment</h2><p class="muted">Partage cette invitation uniquement avec les personnes concernées.</p><div class="share-actions"><button id="shareNative" class="secondary">📲 Partager l’invitation</button><button id="shareWhatsApp" class="secondary">💬 WhatsApp</button><button id="copyPublicLink" class="secondary">📋 Copier le lien</button></div><p id="shareStatus" class="muted"></p></section>
-    </main>
+  <div id="ceremony" class="ceremony hidden" aria-live="polite">
+    <div class="ceremony-stars" aria-hidden="true"></div><div id="particles"></div>
+    <div class="magic-cauldron hidden" id="cauldron" aria-hidden="true"><div class="cauldron-steam steam-one"></div><div class="cauldron-steam steam-two"></div><div class="cauldron-rim"></div><div class="cauldron-liquid"></div><div class="cauldron-body"></div><div class="cauldron-leg leg-left"></div><div class="cauldron-leg leg-right"></div></div>
+    <div class="magic-book hidden" id="book" aria-hidden="true"><div class="book-glow"></div><div class="book-spine"></div><div class="book-page book-page-left"><span></span><span></span><span></span></div><div class="book-page book-page-right"><span></span><span></span><span></span></div><div class="book-cover book-cover-left"></div><div class="book-cover book-cover-right"></div></div>
+    <div class="ceremonyText" id="ceremonyText"></div><button id="replay" class="secondary hidden">↻ Rejouer la cérémonie</button><button id="closeCeremony" class="ghost hidden">Fermer</button>
   </div>
-
-  <div id="ceremony" class="ceremony hidden" aria-live="polite"><div class="ceremony-stars" aria-hidden="true"></div><div id="particles"></div><div class="cauldron" id="cauldron">🔥</div><div class="book hidden" id="book">📖</div><div class="ceremonyText" id="ceremonyText"></div><button id="replay" class="secondary hidden">↻ Rejouer la cérémonie</button><button id="closeCeremony" class="ghost hidden">Fermer</button></div>
-  <script type="module" src="./app-v2.js"></script>
-  <script type="module" src="./share-control.js"></script>
-  <script type="module" src="./invitation.js"></script>
+  <script type="module" src="./app-v2.js"></script><script type="module" src="./share-control.js"></script><script type="module" src="./invitation.js"></script><script type="module" src="./ceremony-upgrade.js"></script>
 </body>
 </html>
