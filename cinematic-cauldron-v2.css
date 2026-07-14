@@ -1,0 +1,16 @@
+.ceremony.cinematic-cauldron{overflow:hidden;background:radial-gradient(circle at 50% 64%,#6c2846 0%,#35143f 34%,#16091f 72%,#09050f 100%)}
+.ceremony.cinematic-cauldron::before{content:"";position:absolute;inset:-15%;background:radial-gradient(circle at 50% 63%,rgba(255,178,79,.2),transparent 24%),radial-gradient(circle at 20% 18%,rgba(143,82,211,.13),transparent 28%),radial-gradient(circle at 82% 22%,rgba(255,101,128,.1),transparent 26%);animation:cinemaBreath 5.5s ease-in-out infinite;pointer-events:none}
+.ceremony.cinematic-cauldron::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.38),transparent 25%,transparent 72%,rgba(0,0,0,.52)),radial-gradient(ellipse at center,transparent 44%,rgba(0,0,0,.45) 100%);pointer-events:none;z-index:2}
+.cinematic-cauldron .magic-cauldron{z-index:8;animation:cauldronEntrance 1.4s cubic-bezier(.2,.8,.2,1) both}
+.cinematic-cauldron .ceremonyText{z-index:30;white-space:pre-line;text-align:center;padding:22px 28px;border-radius:24px}
+.cinematic-cauldron .ceremonyText.message-card{max-width:min(760px,88vw);background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.055));border:1px solid rgba(255,240,210,.24);box-shadow:0 22px 55px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.12);backdrop-filter:blur(10px);font-size:clamp(1.25rem,3vw,2.15rem);line-height:1.5;text-shadow:0 2px 18px rgba(0,0,0,.65)}
+.cinematic-cauldron .ceremonyText.emphasis-soft{font-size:clamp(1.7rem,4vw,3.2rem);color:#fff4c7;text-shadow:0 0 24px rgba(255,189,98,.5)}
+.cinematic-cauldron .ceremonyText.collective-line{font-size:clamp(1.65rem,4vw,3rem);line-height:1.45;color:#fff1d5;text-shadow:0 0 26px rgba(255,183,105,.45)}
+.cinematic-cauldron .ceremonyText.grand-final-message{font-size:clamp(1.8rem,4.5vw,3.6rem);line-height:1.4;color:#fff8db;text-shadow:0 0 14px rgba(255,247,201,.75),0 0 40px rgba(255,149,84,.58),0 5px 28px rgba(0,0,0,.7)}
+.cinematic-cauldron .magic-cauldron.awake{animation:cauldronAwake 1.8s ease-in-out infinite alternate}
+.cinematic-cauldron .magic-cauldron.finale{transform-origin:50% 75%}
+@keyframes cinemaBreath{0%,100%{transform:scale(1);opacity:.72}50%{transform:scale(1.08);opacity:1}}
+@keyframes cauldronEntrance{0%{opacity:0;transform:translateY(90px) scale(.7);filter:blur(10px)}65%{opacity:1;transform:translateY(12px) scale(1.05);filter:blur(0)}100%{transform:translateY(20px) scale(1)}}
+@keyframes cauldronAwake{0%{filter:drop-shadow(0 28px 40px rgba(0,0,0,.55)) brightness(1)}100%{filter:drop-shadow(0 20px 58px rgba(255,133,59,.48)) brightness(1.12)}}
+@media(max-width:620px){.cinematic-cauldron .ceremonyText{padding:18px 18px}.cinematic-cauldron .ceremonyText.message-card{max-width:90vw;font-size:clamp(1.08rem,5vw,1.55rem)}}
+@media(prefers-reduced-motion:reduce){.ceremony.cinematic-cauldron::before,.cinematic-cauldron .magic-cauldron{animation:none!important}}
