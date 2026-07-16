@@ -5,7 +5,7 @@ import { firebaseConfig } from './firebase-config.js';
 const app=getApps()[0]||initializeApp(firebaseConfig);
 const db=getDatabase(app);
 const byId=id=>document.getElementById(id);
-const CURRENT_VERSION='3.1';
+const CURRENT_VERSION='3.2';
 let moments={};
 
 const eveningQuestions=[
@@ -40,19 +40,47 @@ function activeEntries(){return Object.entries(moments).filter(([,m])=>!m.archiv
 function safe(text=''){const node=document.createElement('div');node.textContent=text;return node.innerHTML}
 function versionOf(moment){return String(moment.productVersion||moment.version||'ancienne')}
 function isCurrent(moment){return versionOf(moment)===CURRENT_VERSION}
+function momentUrl(id){return `${location.origin}${location.pathname.replace(/admin\.html$/,'')}?m=${id}`}
+
+async function copyLink(id,button){
+  await navigator.clipboard.writeText(momentUrl(id));
+  if(button){const old=button.textContent;button.textContent='✓ Lien copié';setTimeout(()=>button.textContent=old,1800)}
+}
+
+async function shareMoment(id,moment,button){
+  const url=momentUrl(id);
+  const data={title:moment.title||'Toujours Reliés',text:'Tu es invité(e) à participer à un moment Toujours Reliés.',url};
+  try{
+    if(navigator.share){await navigator.share(data);return}
+    await copyLink(id,button);
+  }catch(error){
+    if(error?.name!=='AbortError'){console.error(error);await copyLink(id,button)}
+  }
+}
 
 function installVersionSummary(){
   const appRoot=byId('adminApp');
-  if(!appRoot||byId('versionSummary'))return;
-  const card=document.createElement('section');
-  card.id='versionSummary';card.className='card';
-  card.innerHTML=`<div class="section-title-row"><div><p class="eyebrow">VERSION DU PROJET</p><h2>Toujours Reliés V${CURRENT_VERSION}</h2></div><span class="status-pill open">Édition fondatrice</span></div><p class="muted">Navigation type Story, lecture intelligente, chaudron cinématique, Chaudron du soir et durée modifiable.</p><div id="versionStatus"></div>`;
-  const hero=appRoot.querySelector('.admin-hero');
-  hero?.insertAdjacentElement('afterend',card);
+  if(!appRoot)return;
+  let card=byId('versionSummary');
+  if(!card){
+    card=document.createElement('section');card.id='versionSummary';card.className='card';
+    const hero=appRoot.querySelector('.admin-hero');hero?.insertAdjacentElement('afterend',card);
+  }
+  card.innerHTML=`<div class="section-title-row"><div><p class="eyebrow">VERSION DU PROJET</p><h2>Toujours Reliés V${CURRENT_VERSION}</h2></div><span class="status-pill open">Édition fondatrice</span></div><p class="muted">Partage mobile, raccourci du dernier moment, navigation Story, lecture intelligente, Chaudron du soir et durée modifiable.</p><div id="latestMomentShortcut"></div><div id="versionStatus"></div>`;
+}
+
+function renderLatestShortcut(){
+  const box=byId('latestMomentShortcut');if(!box)return;
+  const latest=activeEntries()[0];
+  if(!latest){box.innerHTML='<p class="muted">Aucun moment disponible pour le moment.</p>';return}
+  const [id,moment]=latest;
+  box.innerHTML=`<article class="dashboard-card" style="margin-top:14px"><p class="eyebrow">📌 DERNIER MOMENT CRÉÉ</p><h3>${safe(moment.title||'Moment sans titre')}</h3><p class="muted">${safe(moment.theme||'Libre')} · ${moment.forceFinal||Date.now()>=Number(moment.endsAt||0)?'Terminé':'Ouvert'}</p><div class="action-grid primary-actions"><button type="button" class="primary latest-share">📤 Partager</button><button type="button" class="secondary latest-copy">📋 Copier le lien</button><a class="secondary" target="_blank" href="${momentUrl(id)}">👁 Ouvrir</a></div></article>`;
+  box.querySelector('.latest-share').addEventListener('click',event=>shareMoment(id,moment,event.currentTarget));
+  box.querySelector('.latest-copy').addEventListener('click',event=>copyLink(id,event.currentTarget));
 }
 
 function decorateCards(){
-  installEveningTheme();installVersionSummary();
+  installEveningTheme();installVersionSummary();renderLatestShortcut();
   const cards=[...document.querySelectorAll('#momentsList .moment-admin')];
   const entries=activeEntries();
   cards.forEach((card,index)=>{
@@ -62,6 +90,9 @@ function decorateCards(){
     if(!versionLine){versionLine=document.createElement('p');versionLine.className='muted moment-version-v3';card.querySelector('.moment-top > div')?.appendChild(versionLine)}
     versionLine.textContent=isCurrent(moment)?`✓ Version V${CURRENT_VERSION}`:`Version ${versionOf(moment)} · mise à niveau disponible`;
     const area=card.querySelector('.primary-actions');if(!area)return;
+    if(!card.querySelector('.share-v32')){
+      const share=document.createElement('button');share.type='button';share.className='primary share-v32';share.textContent='📤 Partager';share.addEventListener('click',event=>shareMoment(id,moment,event.currentTarget));area.insertBefore(share,area.firstChild);
+    }
     if(!isCurrent(moment)&&!card.querySelector('.upgrade-v3')){
       const upgrade=document.createElement('button');upgrade.type='button';upgrade.className='secondary upgrade-v3';upgrade.textContent='⬆️ Mettre à niveau';upgrade.addEventListener('click',()=>upgradeMoment(id,moment));area.appendChild(upgrade);
     }
@@ -73,7 +104,7 @@ function decorateCards(){
 
 async function upgradeMoment(id,moment){
   if(!confirm(`Mettre « ${moment.title||'ce moment'} » à niveau vers la V${CURRENT_VERSION} ?\n\nLes messages, les participants et le lien seront conservés.`))return;
-  const patch={productVersion:CURRENT_VERSION,animationType:'cauldron',storyNavigation:true,readingMode:'dynamic',esteemText:'Tu es unique. Tu as de la valeur.',upgradedAt:Date.now()};
+  const patch={productVersion:CURRENT_VERSION,animationType:'cauldron',storyNavigation:true,readingMode:'dynamic',esteemText:'Tu es unique. Tu as de la valeur.',mobileShare:true,upgradedAt:Date.now()};
   const final=String(moment.finalText||'');
   if(!final||/morceau de (votre|la) journée/i.test(final))patch.finalText='Merci d’avoir partagé un morceau de toi.';
   try{await update(ref(db,`moments/${id}`),patch);byId('versionStatus').textContent='Moment mis à niveau sans perte de données.'}
@@ -97,7 +128,7 @@ function openExtend(id,moment){
 
 function tagNewestCreatedMoment(){
   const recent=Object.entries(moments).filter(([,m])=>!m.productVersion&&Date.now()-Number(m.createdAt||0)<20000).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0))[0];
-  if(recent)update(ref(db,`moments/${recent[0]}`),{productVersion:CURRENT_VERSION,storyNavigation:true,readingMode:'dynamic'}).catch(console.error);
+  if(recent)update(ref(db,`moments/${recent[0]}`),{productVersion:CURRENT_VERSION,storyNavigation:true,readingMode:'dynamic',mobileShare:true}).catch(console.error);
 }
 
 byId('momentForm')?.addEventListener('submit',()=>setTimeout(tagNewestCreatedMoment,1400));
